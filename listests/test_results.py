@@ -14,7 +14,7 @@ from listests import logger, run_command, settings_files
 """
 How to run:
 
-pytest test_long_efas_run.py -s
+pytest test_results.py -s
   -L /workarea/lisflood_versions/1_e5eb9f03/lisf1.py  # Path to lisf1.py main script
   -R /workarea/EFAS/  # Path to root (PathRoot in settings_files file)
   -M /workarea/EFAS/EFAS_forcings/   # Path to meteo forcings
@@ -60,6 +60,7 @@ class TestRun:
         compile_cmd = ' '.join((f'cd {kw_dir} &&', pybin.as_posix(), compile_krw.name, 'build_ext', '--inplace'))
         run_command(compile_cmd)
 
+        logger.info('\n\n')
         logger.info(' ============================== START OF LISFLOOD OUTPUT ============================== ')
         lisflood_cmd = ' '.join((f'cd {lis_dir} &&', pybin.as_posix(), 'lisf1.py', cls.settings_filepath.as_posix()))
         run_command(lisflood_cmd)
@@ -87,6 +88,7 @@ class TestRun:
 
     def test_rep_maps(self):
         # check all nc. maps in output folder
+        logger.info('\n\n')
         logger.info(' ============================== START NETCDF TESTS ================================== ')
         comparator = NetCDFComparator(self.mask_map)
         diffs = comparator.compare_dirs(self.options['reference'], self.options['pathout'], skip_missing=False)
@@ -96,6 +98,7 @@ class TestRun:
 
     def test_tss(self):
         # check all TSS in output folder
+        logger.info('\n\n')
         logger.info(' ============================= START TSS TESTS ===================================== ')
         comparator = TSSComparator()
         diffs = comparator.compare_dirs(self.options['reference'], self.options['pathout'], skip_missing=False)

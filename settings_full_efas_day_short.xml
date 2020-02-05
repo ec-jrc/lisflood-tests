@@ -122,13 +122,13 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
             </comment>
 
             <!-- menta -->
-            <textvar name="PathOut" value="/workarea/lf_results/EFAS/out_daily">
+            <textvar name="PathOut" value="/workarea/lf_results/reference/EFAS/out_daily_1month/full">
                 <comment>
                     Output path (org=$(PathRoot)/out)
                 </comment>
             </textvar>
 
-            <textvar name="PathInit" value="/workarea/lf_results/EFAS/InitSafe">
+            <textvar name="PathInit" value="/workarea/lf_results/reference/EFAS/InitSafe">
                 <comment>
                     Path of the initial value maps e.g. lzavin.map (org=$(PathRoot)/outPo)
                 </comment>
@@ -210,41 +210,11 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
             </textvar>
 
             <textvar name="MaskMap" value="$(PathRoot)/area.nc">
-                <comment>
-                    70 40 0.1 -8.6 43.3 # Douro
-                    30 30 0.1 6.0 52.0
-                    Clone map
-                    col row cellsize xupleft yupleft
-                    300 200 0.1 -15 25 -> Niger
-                    3600 1500 0.1 -180 90 -> World
-                    $(PathRoot)\areamaps\areaEurope.map
-                    $(PathRoot)\areamaps\AreaPo.map
-                    or pcraster maps or netcdf maps
-                    e.g.
-                    Rhine areaLobith.map
-                    Niger areaLokoja.map
-                    Po areaPo.map
-                    Danube areaDanube.map
-                    Sava areaSava.map
-                </comment>
+
             </textvar>
 
             <textvar name="Gauges" value="$(PathMaps)/outlets.nc">
-                <comment>
-                    -7.85 41.15 -7.75 41.15 -7.35 41.15 -7.25 41.15 -7.15 41.15 -7.05 41.15 -5.85 41.75 # Duoro
-                    6.15 51.85
-                    12.25 44.95 9.95 45.15 # Po
-                    Nominal map with gauge locations (i.e cells for which simulated discharge
-                    is written to file(1,2,3 etc)
-                    lat lon (lat2 lon2 ...)
-                    or pcraster maps or netcdf maps
-                    ./mapsNetcdf/maps/outlets_World.map
-                    $(PathMaps)/outlets.map
-                    e.g.
-                    Lobith/Rhine 6.15 51.85
-                    Bratislava/Danube 17.15 48.15
-                    Niger/Lokoja 6.75 7.85 0.45 15.65
-                </comment>
+
             </textvar>
 
             <textvar name="netCDFtemplate" value="$(PathMaps)/elvstd.nc">
@@ -277,8 +247,6 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
 
             <textvar name="DtSecChannel" value="3600">
                 <comment>
-                    17280 5 times subrouting
-                    21600 4 times
                     Sub time step used for kinematic wave channel routing [seconds]
                     Within the model,the smallest out of DtSecChannel and DtSec is used
                 </comment>
@@ -286,7 +254,6 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
 
             <textvar name="StepStart" value="01/05/2015 06:00">
                 <comment>
-                    SMHI r1-r4 1/1/2066 = 21916
                     Number of first time step in simulation
                 </comment>
             </textvar>
@@ -295,14 +262,13 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
             <!--<textvar name="StepEnd" value="10957">-->
             <textvar name="StepEnd" value="31/05/2015 06:00">
                 <comment>
-                    IPSL RCP85 2011-2099 32507
                     Number of last time step in simulation
                 </comment>
             </textvar>
 
             <!-- menta -->
             <!--<textvar name="ReportSteps" value="1..10957">-->
-            <textvar name="ReportSteps" value="1..99999">
+            <textvar name="ReportSteps" value="9250..9300">
                 <comment>
                     Time steps at which to write model state maps (i.e. only
                     those maps that would be needed to define initial conditions
