@@ -302,7 +302,7 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
 
             <!-- menta -->
             <!--<textvar name="ReportSteps" value="1..10957">-->
-            <textvar name="ReportSteps" value="1..99999">
+            <textvar name="ReportSteps" value="13260..13300">
                 <comment>
                     Time steps at which to write model state maps (i.e. only
                     those maps that would be needed to define initial conditions

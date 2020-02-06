@@ -291,8 +291,6 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
                 </comment>
             </textvar>
 
-            <!--menta-->
-            <!--<textvar name="StepEnd" value="10957">-->
             <textvar name="StepEnd" value="30/06/2017 06:00">
                 <comment>
                     IPSL RCP85 2011-2099 32507
@@ -300,9 +298,7 @@ The option "numberParallelThreadsKinematicWave" may take the following values:
                 </comment>
             </textvar>
 
-            <!-- menta -->
-            <!--<textvar name="ReportSteps" value="1..10957">-->
-            <textvar name="ReportSteps" value="1..99999">
+            <textvar name="ReportSteps" value="9130..10050">
                 <comment>
                     Time steps at which to write model state maps (i.e. only
                     those maps that would be needed to define initial conditions
