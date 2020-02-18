@@ -45,7 +45,7 @@ def options(request):
     options['smallwindow'] = request.config.getoption('--smallwindow')
 
     if not options['pathout'].exists():
-        options['pathout'].mkdir()
+        options['pathout'].mkdir(parents=True)
     elif options['pathout'].exists() and options['lisflood'] is not None and options['lisflood'].exists():
         logger.warning('Removing older result from %s', options['pathout'].as_posix())
         for f in chain(options['pathout'].glob('*.nc'), options['pathout'].glob('*.tss')):
