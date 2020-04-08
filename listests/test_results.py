@@ -26,6 +26,7 @@ pytest test_results.py -s
 
 """
 
+
 @pytest.mark.usefixtures("options")
 class TestRun:
 
@@ -66,7 +67,6 @@ class TestRun:
         run_command(lisflood_cmd)
         logger.info(' ============================== END OF LISFLOOD OUTPUT ================================ ')
 
-
     @classmethod
     def teardown_class(cls):
         os.remove(cls.settings_filepath)
@@ -77,7 +77,7 @@ class TestRun:
         Return XML representation of settings_files file, based on BeautifulSoup4
         """
         # -s suffix means 'small window'
-        settings_key = f'{cls.options["runtype"]}-s' if cls.options['smallwindow'] else cls.options["runtype"]
+        settings_key = cls.options["runtype"]
         settings_file = settings_files[settings_key]
         with open(settings_file) as tpl:
             soup = BeautifulSoup(tpl, 'lxml-xml')
@@ -90,7 +90,7 @@ class TestRun:
         # check all nc. maps in output folder
         logger.info('\n\n')
         logger.info(' ============================== START NETCDF TESTS ================================== ')
-        comparator = NetCDFComparator(self.mask_map)
+        comparator = NetCDFComparator(self.mask_map, rtol=self.options['rtol'], atol=self.options['atol'])
         diffs = comparator.compare_dirs(self.options['reference'], self.options['pathout'], skip_missing=False)
         if diffs:
             pprint(diffs)

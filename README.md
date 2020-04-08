@@ -17,16 +17,13 @@ It's also possible to compare existing results, without running a simulation.
 | -O, --pathout    | Path/String  | Path to results for the version under test |
 | -X, --reference  | Path/String  | Path to Lisflood oracle data               |
 | -T, --runtype    | String       | Type of test to execute: see table below   |
-| -Q, --smallwindow| Flag         | If passed, run short simulation (1 month)  |
 
 | Runtype option    | Description                     | Simulation length  |
 |:-----------------:|---------------------------------|--------------------|
-| ECD               | EFAS Cold start Daily           |2,5 years / 1 month |
-| EC6               | EFAS Cold start 6 hourly        |1,5 years / 1 month |
-| EWD               | EFAS Warm start Daily           |                    |
-| EW6               | EFAS Warm start 6 hourl         |                    |
-| GCD               | GLOFAS Cold Start Daily         |1 year / 1 month    |
-| GWD               | GLOFAS Warm start Daily         |                    |
+| ECD   ECD-s       | EFAS Cold start Daily           |2,5 years / 1 month |
+| EC6   EC6-s       | EFAS Cold start 6 hourly        |1,5 years / 1 month |
+| GCD   GCD-s       | GLOFAS Cold Start Daily         |1 year / 1 month    |
+| GCD5y             | GLOFAS Cold start Daily         |5 years             |
 
 
 ## Example 1
@@ -44,8 +41,7 @@ PYTHONPATH=/opt/pcraster36/python && pytest listests/test_results.py \
     -M /workarea/EFAS/EFAS_forcings/6hourly \
     -I /workarea/EFAS/InitSafe/ \
     -X /workarea/lf_results/reference/EFAS/out_6hourly_1month \
-    -T EC6 \
-    -Q \
+    -T EC6-s \
     --show-capture=no -s
 ```
 
@@ -54,7 +50,7 @@ PYTHONPATH=/opt/pcraster36/python && pytest listests/test_results.py \
 Compare results between /workarea/lf_results/14_da0c9aa3/out and /workarea/lf_results/reference/EFAS/out
 
 ```bash
-pytest listests/test_results.py -O /workarea/lf_results/14_da0c9aa3/out -X /workarea/lf_results/reference/EFAS/out 
+pytest listests/test_results.py -O /workarea/lf_results/14_da0c9aa3/out -X /workarea/lf_results/reference/EFAS/out -R /workarea/EFAS
 ```
 
 ## Example 3

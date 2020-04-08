@@ -24,10 +24,12 @@ def pytest_addoption(parser):
 
     parser.addoption('-X', '--reference', type=lambda p: Path(p).absolute(), help='Path to Lisflood oracle results',
                      required=True)
-    parser.addoption('-T', '--runtype', help='Test Type: e.g. EC6=EFAS Cold 6hourly run; GWD=GloFAS Warm Daily run',
-                     choices=['ECD', 'EC6', 'EWD', 'EW6', 'GCD', 'GWD'])
-    parser.addoption('-Q', '--smallwindow', help='If passed, a short (1 month) test will run', action='store_true',
-                     default=False)
+    parser.addoption('-T', '--runtype', help='Test Type: e.g. EC6=EFAS Cold 6hourly run; '
+                                             'GCD-s=GloFAS Cold Daily short run',
+                     choices=['ECD', 'EC6', 'GCD', 'GCD5y', 'ECD-s', 'EC6-s', 'GCD-s', ])
+
+    parser.addoption('--rtol', help='Relative Tolerance (e.g. 0.001)', type=float, default=0.01)
+    parser.addoption('--atol', help='Absolute Tolerance (e.g. 0.001)', type=float, default=0.00001)
 
 
 @pytest.fixture(scope='class', autouse=True)
@@ -41,8 +43,9 @@ def options(request):
     options['pathout'] = request.config.getoption('--pathout') or options['pathroot']
     options['pathinit'] = request.config.getoption('--pathinit') or options['pathroot']
     options['reference'] = request.config.getoption('--reference')
-    options['runtype'] = request.config.getoption('--runtype') or 'Compare results only'
-    options['smallwindow'] = request.config.getoption('--smallwindow')
+    options['runtype'] = request.config.getoption('--runtype')
+    options['rtol'] = request.config.getoption('--rtol')
+    options['atol'] = request.config.getoption('--atol')
 
     if not options['pathout'].exists():
         options['pathout'].mkdir(parents=True)
