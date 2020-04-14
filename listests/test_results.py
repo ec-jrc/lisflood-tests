@@ -22,7 +22,9 @@ pytest test_results.py -s
   -P /workarea/virtualenvs/lisflood27/bin/python   # Path to python binary
   -I /workarea/lf_results/reference/EFAS/InitSafe/   # Path to init folder
   -X /workarea/lf_results/reference/EFAS/out_daily  # Path to reference data (Oracle data)
-  -T ECD  # kind of simulation: Efas Cold Daily in this case
+  -T ECD  # kind of simulation: Efas Cold Daily long simulation (2years) in this case
+  --rtol=0.01 --atol=0.001
+  -E # flag for array identical comparison
 
 """
 
@@ -33,12 +35,22 @@ class TestRun:
     @classmethod
     def setup_class(cls):
         # run lisflood
+        cls.settings_filepath = None
         pybin = cls.options['python']
         lisflood_py = cls.options['lisflood']
         pathout = cls.options['pathout']
+        cls.mask_map = cls.options['mask']
+        if not lisflood_py:
+            if not pathout:
+                raise ValueError('If --lisflood/-L option is not set you must pass --pathout/-O argument'
+                                 ' to point to existing LISFLOOD results')
+            # no need to run lisflood; just compare existing results
+            return
+
         cls.settings_xml = cls.get_settings()
-        cell = cls.settings_xml.select('lfuser textvar[name="MaskMap"]')[0]
-        cls.mask_map = cell.attrs['value'].replace('$(PathRoot)', str(cls.options['pathroot']))
+        if not cls.mask_map:
+            cell = cls.settings_xml.select('lfuser textvar[name="MaskMap"]')[0]
+            cls.mask_map = cell.attrs['value'].replace('$(PathRoot)', str(cls.options['pathroot']))
 
         # Generating XML settings_files on fly from template
         uid = uuid.uuid4()
@@ -46,13 +58,6 @@ class TestRun:
         with open(filename, 'w') as dest:
             dest.write(cls.settings_xml.prettify())
         cls.settings_filepath = Path(filename).absolute()
-
-        if not lisflood_py:
-            if not pathout:
-                raise ValueError('If --lisflood/-L option is not set you must pass --pathout/-O argument'
-                                 ' to point to existing LISFLOOD results')
-            # no need to run lisflood; just compare existing results
-            return
 
         # Compile kinematic wave
         compile_krw = lisflood_py.parent.joinpath('hydrological_modules/compile_kinematic_wave_parallel_tools.py') if lisflood_py else None
@@ -69,7 +74,8 @@ class TestRun:
 
     @classmethod
     def teardown_class(cls):
-        os.remove(cls.settings_filepath)
+        if cls.settings_filepath:
+            os.remove(cls.settings_filepath)
 
     @classmethod
     def get_settings(cls):
@@ -90,7 +96,8 @@ class TestRun:
         # check all nc. maps in output folder
         logger.info('\n\n')
         logger.info(' ============================== START NETCDF TESTS ================================== ')
-        comparator = NetCDFComparator(self.mask_map, rtol=self.options['rtol'], atol=self.options['atol'])
+        comparator = NetCDFComparator(self.mask_map, rtol=self.options['rtol'], atol=self.options['atol'],
+                                      for_testing=False, array_equal=self.options['array_equal'])
         diffs = comparator.compare_dirs(self.options['reference'], self.options['pathout'], skip_missing=False)
         if diffs:
             pprint(diffs)
@@ -100,7 +107,8 @@ class TestRun:
         # check all TSS in output folder
         logger.info('\n\n')
         logger.info(' ============================= START TSS TESTS ===================================== ')
-        comparator = TSSComparator()
+        comparator = TSSComparator(rtol=self.options['rtol'], atol=self.options['atol'],
+                                   for_testing=False, array_equal=self.options['array_equal'])
         diffs = comparator.compare_dirs(self.options['reference'], self.options['pathout'], skip_missing=False)
         if diffs:
             pprint(diffs)

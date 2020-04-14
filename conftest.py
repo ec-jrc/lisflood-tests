@@ -9,27 +9,33 @@ from listests import logger
 
 
 def pytest_addoption(parser):
+    # required arguments
+    parser.addoption('-O', '--pathout', type=lambda p: Path(p).absolute(),
+                     help='Path to Lisflood results', required=True)
+    parser.addoption('-K', '--mask', type=lambda p: Path(p).absolute(),
+                     help='Path to netCDF mask file', required=True)
+    parser.addoption('-X', '--reference', type=lambda p: Path(p).absolute(),
+                     help='Path to Lisflood oracle results', required=True)
+
+    # optional arguments needed for running lisflood version
     parser.addoption('-P', '--python', type=lambda p: Path(p), help='Path to python binary', default='python')
     parser.addoption('-L', '--lisflood', type=lambda p: Path(p).absolute(), help='Path to main lisf1.py script')
-
-    # pathroot is needed even if test doesn't run any simulation, since we need it to find the MaskMap
     parser.addoption('-R', '--pathroot', type=lambda p: Path(p).absolute(), help='Path to Root static data directory.',
-                     required=True)
+                     required=False)
     parser.addoption('-S', '--pathstatic', type=lambda p: Path(p).absolute(),
                      help='Path to Lisflood static data (e.g. maps)')
     parser.addoption('-M', '--pathmeteo', type=lambda p: Path(p).absolute(), help='Path to Lisflood meteo forcings')
     parser.addoption('-I', '--pathinit', type=lambda p: Path(p).absolute(), help='Path to Lisflood init data')
-    parser.addoption('-O', '--pathout', type=lambda p: Path(p).absolute(), help='Path to Lisflood results',
-                     required=True)
 
-    parser.addoption('-X', '--reference', type=lambda p: Path(p).absolute(), help='Path to Lisflood oracle results',
-                     required=True)
-    parser.addoption('-T', '--runtype', help='Test Type: e.g. EC6=EFAS Cold 6hourly run; '
+    parser.addoption('-T', '--runtype', help='Test Type: e.g. EC6=EFAS Cold 6hourly long run; '
                                              'GCD-s=GloFAS Cold Daily short run',
                      choices=['ECD', 'EC6', 'GCD', 'GCD5y', 'ECD-s', 'EC6-s', 'GCD-s', ])
 
-    parser.addoption('--rtol', help='Relative Tolerance (e.g. 0.001)', type=float, default=0.01)
-    parser.addoption('--atol', help='Absolute Tolerance (e.g. 0.001)', type=float, default=0.00001)
+    # optional arguments for comparison
+    parser.addoption('--rtol', help='Relative Tolerance (e.g. 0.001)', type=float, default=0.0001)
+    parser.addoption('--atol', help='Absolute Tolerance (e.g. 0.0001)', type=float, default=0.00001)
+    parser.addoption('-E', '--array-equal', help='Flag for array bit equality. If passed, tests ignore rtol and atol',
+                     action='store_true')
 
 
 @pytest.fixture(scope='class', autouse=True)
@@ -46,6 +52,8 @@ def options(request):
     options['runtype'] = request.config.getoption('--runtype')
     options['rtol'] = request.config.getoption('--rtol')
     options['atol'] = request.config.getoption('--atol')
+    options['mask'] = request.config.getoption('--mask')
+    options['array_equal'] = request.config.getoption('--array-equal')
 
     if not options['pathout'].exists():
         options['pathout'].mkdir(parents=True)
