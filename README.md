@@ -17,6 +17,10 @@ It's also possible to compare existing results, without running a simulation.
 | -O, --pathout    | Path/String  | Path to results for the version under test |
 | -X, --reference  | Path/String  | Path to Lisflood oracle data               |
 | -T, --runtype    | String       | Type of test to execute: see table below   |
+| -K, --mask       | Path/String  | Path to mask                               |
+| -E, --array-equal| Bool flag    | Flag for identical comparisons             |
+| --rtol           | Decimal      | relative tolerance in comparators          |
+| --atol           | Decimal      | absolute tolerance                         |
 
 | Runtype option    | Description                     | Simulation length  |
 |:-----------------:|---------------------------------|--------------------|
@@ -50,7 +54,7 @@ PYTHONPATH=/opt/pcraster36/python && pytest listests/test_results.py \
 Compare results between /workarea/lf_results/14_da0c9aa3/out and /workarea/lf_results/reference/EFAS/out
 
 ```bash
-pytest listests/test_results.py -O /workarea/lf_results/14_da0c9aa3/out -X /workarea/lf_results/reference/EFAS/out -R /workarea/EFAS
+pytest listests/test_results.py -O /workarea/lf_results/14_da0c9aa3/out -X /workarea/lf_results/reference/EFAS/out -K /workarea/EFAS/maps/area.nc
 ```
 
 ## Example 3
