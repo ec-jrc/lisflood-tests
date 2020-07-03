@@ -1,4 +1,0 @@
-lisflood-utilities>=0.12.0
-pytest
-lxml
-beautifulsoup4
